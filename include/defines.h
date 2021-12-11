@@ -181,6 +181,14 @@ enum {
    CI_LoadApparent,
    CI_NomApparent,
 
+   /* SNMP High Precision */
+   CI_HPVLINE,                     /* line voltage - High Precision */
+   CI_HPVMAX,                      /* line max voltage - High Precision */
+   CI_HPVMIN,                      /* line min voltage - High Precision */
+   CI_HPVOUT,                      /* Output voltage - High Precision */
+   CI_HPVBATT,                     /* Battery voltage - High Precision */
+   CI_HPLOAD,                      /* UPS Load - High Precision */
+
    /* Only seen on the BackUPS Pro USB (so far) */
    CI_BUPBattCapBeforeStartup,  
    CI_BUPDelayBeforeStartup,    

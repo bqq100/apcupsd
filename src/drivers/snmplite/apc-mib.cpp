@@ -67,6 +67,14 @@ static struct CiOidMap CiOidMap[] =
    {CI_VMIN,            upsAdvInputMinLineVoltage,       GAUGE,       true },
    {CI_VMAX,            upsAdvInputMaxLineVoltage,       GAUGE,       true },
 
+   // These 6 are used to obtain High Precision data instead of Integer data
+   {CI_HPVBATT,         upsHighPrecBatteryActualVoltage, INTEGER,     true },
+   {CI_HPLOAD,          upsHighPrecOutputLoad,           GAUGE,       true },
+   {CI_HPVLINE,         upsHighPrecInputLineVoltage,     GAUGE,       true },
+   {CI_HPVMAX,          upsHighPrecInputMaxLineVoltage,  GAUGE,       true },
+   {CI_HPVMIN,          upsHighPrecInputMinLineVoltage,  GAUGE,       true },
+   {CI_HPVOUT,          upsHighPrecOutputVoltage,        GAUGE,       true },
+
    // These 5 collectively are used to obtain the data for CI_STATUS.
    // All bits are available in upsBasicStateOutputState at once but 
    // the old AP960x cards do not appear to support that OID, so we use 
@@ -442,7 +450,39 @@ static void apc_update_ci(UPSINFO *ups, int ci, Snmp::Variable &data)
       Dmsg(80, "Got CI_VMAX: %d\n", data.u32);
       ups->LineMax = data.u32;
       break;
+
+   case CI_HPVLINE:
+      Dmsg(80, "Got CI_HPVLINE: %d\n", data.u32);
+      ups->LineVoltage = (float) data.u32 / (float) 10;
+      break;
+
+   case CI_HPVMIN:
+      Dmsg(80, "Got CI_HPVMIN: %d\n", data.u32);
+      ups->LineMin = (float) data.u32 / (float) 10;
+      break;
+
+   case CI_HPVMAX:
+      Dmsg(80, "Got CI_HPVMAX: %d\n", data.u32);
+      ups->LineMax = (float) data.u32 / (float) 10;
+      break;
+
+   case CI_HPVOUT:
+      Dmsg(80, "Got CI_HPVOUT: %d\n", data.u32);
+      ups->OutputVoltage = (float) data.u32 / (float) 10;
+      break;
+
+   case CI_HPVBATT:
+      Dmsg(80, "Got CI_HPVBATT: %d\n", data.u32);
+      ups->BattVoltage = (float) data.u32 / (float) 10;
+       break;
+
+   case CI_HPLOAD:
+      Dmsg(80, "Got CI_HPLOAD: %d\n", data.u32);
+      ups->UPSLoad = (float) data.u32 / (float) 10;
+      break;
+
    }
+
 }
 
 static int apc_killpower(Snmp::SnmpEngine *snmp)
